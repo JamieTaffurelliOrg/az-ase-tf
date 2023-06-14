@@ -58,3 +58,20 @@ resource "azurerm_service_plan" "service_plans" {
   zone_balancing_enabled     = each.value["zone_balancing_enabled"]
   tags                       = var.tags
 }
+
+resource "azurerm_monitor_diagnostic_setting" "acr_diagnostics" {
+  for_each                   = { for k in var.service_plans : k.name => k if k != null }
+  name                       = "${var.log_analytics_workspace_name}-security-logging"
+  target_resource_id         = azurerm_service_plan.service_plans[(each.key)].id
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.logs.id
+
+  metric {
+    category = "AllMetrics"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+}
