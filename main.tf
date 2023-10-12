@@ -46,6 +46,7 @@ resource "azurerm_monitor_diagnostic_setting" "ase_diagnostics" {
 }
 
 resource "azurerm_service_plan" "service_plans" {
+  #checkov:skip=CKV_AZURE_225:Zone redundancy will not be required in all envs
   for_each                   = { for k in var.service_plans : k.name => k if k != null }
   name                       = each.key
   resource_group_name        = var.resource_group_name
