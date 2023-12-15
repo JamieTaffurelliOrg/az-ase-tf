@@ -34,14 +34,8 @@ resource "azurerm_monitor_diagnostic_setting" "ase_diagnostics" {
   target_resource_id         = azurerm_app_service_environment_v3.ase.id
   log_analytics_workspace_id = data.azurerm_log_analytics_workspace.logs.id
 
-  log {
+  enabled_log {
     category = "AppServiceEnvironmentPlatformLogs"
-    enabled  = true
-
-    retention_policy {
-      enabled = true
-      days    = 365
-    }
   }
 }
 
@@ -69,10 +63,5 @@ resource "azurerm_monitor_diagnostic_setting" "acr_diagnostics" {
   metric {
     category = "AllMetrics"
     enabled  = true
-
-    retention_policy {
-      enabled = true
-      days    = 365
-    }
   }
 }
